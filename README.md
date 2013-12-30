@@ -10,7 +10,10 @@ A library to serialize Ruby objects into collection+json.
 
 ![conglomerate](http://i.imgur.com/QkKZ0ru.jpg)
 
-This library focuses just on converting Ruby objects into Collection+JSON. It aims to have the simplest format possible when constructing serializers specific to Collection+JSON. It also tries to provide all common Collection+JSON extensions to make it easy to create your API.
+This library focuses just on converting Ruby objects into Collection+JSON. It
+aims to have the simplest format possible when constructing serializers
+specific to Collection+JSON. It also tries to provide all common
+Collection+JSON extensions to make it easy to create your API.
 
 ## Installation
 
@@ -32,16 +35,16 @@ Or install it yourself as:
 # Step 1: Create a serializer
 class TeamSerializer
   include Conglomerate.serializer
-  
+
   href { teams_url }
   item_href { |item| team_url(item.id) }
-  
+
   attribute :id
   attribute :name, :template => true
   attribute :event_ids, :rel => :events { |item| event_url(item.event_ids.join(",")) }
-  
+
   link :root { root_url }
-  
+
   query :search, :data => :id { search_teams_url }
 end
 
