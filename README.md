@@ -1,5 +1,11 @@
 # Conglomerate
 
+[![Gem Version](https://badge.fury.io/rb/conglomerate.png)](http://badge.fury.io/rb/conglomerate)
+[![Code Climate](https://codeclimate.com/github/teamsnap/conglomerate.png)](https://codeclimate.com/github/teamsnap/conglomerate)
+[![Coverage Status](https://coveralls.io/repos/teamsnap/conglomerate/badge.png?branch=master)](https://coveralls.io/r/teamsnap/conglomerate?branch=master)
+[![Dependency Status](https://gemnasium.com/teamsnap/conglomerate.png)](https://gemnasium.com/teamsnap/conglomerate)
+[![License](http://img.shields.io/license/MIT.png?color=green)](http://opensource.org/licenses/MIT)
+
 A library to serialize Ruby objects into collection+json.
 
 ![conglomerate](http://i.imgur.com/QkKZ0ru.jpg)
