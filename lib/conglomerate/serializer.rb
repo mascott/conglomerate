@@ -106,7 +106,7 @@ module Conglomerate
     def apply_links(collection, links: self.class._links, object: nil)
       if object && !links.empty?
         links = links.map do |link|
-          if object.send(link[:name])
+          if present?(object.send(link[:name]))
             build_item_link(
               link[:rel], :proc => link[:block], :object => object
             )
@@ -145,6 +145,18 @@ module Conglomerate
     def build_item_link(rel, proc: nil, object: nil)
       link = {"rel" => rel.to_s}
       apply_href(link, :proc => proc, :object => object)
+    end
+
+    def blank?(value)
+      if value.is_a?(String)
+        value !~ /[^[:space:]]/
+      else
+        value.respond_to?(:empty?) ? value.empty? : !value
+      end
+    end
+
+    def present?(value)
+      !blank?(value)
     end
 
     module ClassMethods

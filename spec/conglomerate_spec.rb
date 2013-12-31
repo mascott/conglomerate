@@ -18,6 +18,9 @@ class ConglomerateTestSerializer
   attribute :team_ids, :rel => :teams do |item|
     team_url(item.team_ids.join(","))
   end
+  attribute :user_ids, :rel => :users do |item|
+    user_url(item.user_ids.join(","))
+  end
 
   link :events do
     events_url
@@ -46,7 +49,8 @@ describe Conglomerate do
       :description => "Tasty Burgers",
       :event_id => 2,
       :roster_id => nil,
-      :team_ids => [1,2]
+      :team_ids => [1,2],
+      :user_ids => []
     )
   end
 
@@ -152,7 +156,8 @@ describe Conglomerate do
                 {"name" => "id", "value" => 1},
                 {"name" => "event_id", "value" => 2},
                 {"name" => "roster_id", "value" => nil},
-                {"name" => "team_ids", "value" => [1,2]}
+                {"name" => "team_ids", "value" => [1,2]},
+                {"name" => "user_ids", "value" => []}
               ],
               "links" => [
                 {"rel" => "event", "href" => "https://example.com/events/2"},
