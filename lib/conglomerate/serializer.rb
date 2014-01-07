@@ -189,7 +189,7 @@ module Conglomerate
       attr_writer :_href, :_item_href, :_queries, :_attributes, :_links
 
       def _href
-        @_href || Proc.new { request.original_url }
+        @_href || Proc.new { raise ArgumentError, "You must include an href" }
       end
 
       def _item_href
