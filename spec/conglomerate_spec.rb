@@ -34,17 +34,10 @@ end
 class ConglomerateExtraTestSerializer
   include Conglomerate.serializer
 
-  href { "" }
   attribute :id
 end
 
 class ConglomerateNullSerializer
-  include Conglomerate.serializer
-
-  href { "" }
-end
-
-class ConglomerateInvalidSerializer
   include Conglomerate.serializer
 end
 
@@ -96,17 +89,11 @@ describe Conglomerate do
     ConglomerateNullSerializer.new(object, :context => context).serialize
   end
 
-  let(:invalid_serializer) do
-    ConglomerateInvalidSerializer.new(object, :context => context).serialize
-  end
-
   let(:test_collection) { test_serializer["collection"] }
 
   let(:extra_test_collection) { extra_test_serializer["collection"] }
 
   let(:null_collection) { null_serializer["collection"] }
-
-  let(:invalid_collection) { invalid_serializer["collection"] }
 
   describe "#version" do
     it "sets version to 1.0" do
@@ -120,8 +107,8 @@ describe Conglomerate do
       expect(test_collection["href"]).to eq("abc")
     end
 
-    it "errors if no href given" do
-      expect { invalid_collection["href"] }.to raise_error
+    it "isn't included if the href is nil" do
+      expect(null_collection["href"]).to be_nil
     end
   end
 

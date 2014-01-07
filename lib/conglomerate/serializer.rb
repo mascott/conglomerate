@@ -30,10 +30,14 @@ module Conglomerate
     end
 
     def apply_href(collection, proc: self.class._href, object: nil)
-      if object
-        collection.merge({"href" => context.instance_exec(object, &proc)})
+      if proc
+        if object
+          collection.merge({"href" => context.instance_exec(object, &proc)})
+        else
+          collection.merge({"href" => context.instance_eval(&proc)})
+        end
       else
-        collection.merge({"href" => context.instance_eval(&proc)})
+        collection
       end
     end
 
@@ -189,7 +193,7 @@ module Conglomerate
       attr_writer :_href, :_item_href, :_queries, :_attributes, :_links
 
       def _href
-        @_href || Proc.new { raise ArgumentError, "You must include an href" }
+        @_href || nil
       end
 
       def _item_href
