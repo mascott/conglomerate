@@ -42,8 +42,11 @@ module Conglomerate
     end
 
     def apply_data(collection, data: [], object: nil)
-      data = data.map do |name|
-        {"name" => name.to_s, "value" => object.nil? ? "" : object.send(name)}
+      data = data.map do |datum|
+        name = datum[:name]
+        value = object.nil? ? "" : object.send(name)
+
+        {"name" => name.to_s, datum.fetch(:type, "value").to_s => value}
       end
 
       if data.empty?
@@ -75,8 +78,8 @@ module Conglomerate
           )
         end
 
-        names = self.class._attributes.map { |attr| attr[:name] }
-        item = apply_data(item, :data => names, :object => object)
+        attributes = self.class._attributes
+        item = apply_data(item, :data => attributes, :object => object)
 
         links = self.class._attributes
           .select { |attr| attr[:block] }
@@ -98,7 +101,6 @@ module Conglomerate
     def apply_template(collection)
       attrs = self.class._attributes
         .select { |attr| attr[:template] }
-        .map { |attr| attr[:name] }
 
       if attrs.empty?
         collection
@@ -173,14 +175,17 @@ module Conglomerate
       end
 
       def query(rel, data: [], &block)
+        data = [*data]
+        data = data.map { |datum| {:name => datum} }
         self._queries = self._queries << {
-          :rel => rel, :data => [*data], :block => block
+          :rel => rel, :data => data, :block => block
         }
       end
 
-      def attribute(name, template: false, rel: nil, &block)
+      def attribute(name, template: false, rel: nil, type: :value, &block)
         self._attributes = self._attributes << {
-          :name => name, :template => template, :rel => rel, :block => block
+          :name => name, :template => template, :rel => rel, :type => type,
+          :block => block
         }
       end
 
