@@ -41,12 +41,15 @@ module Conglomerate
       end
     end
 
-    def apply_data(collection, data: [], object: nil)
+    def apply_data(collection, data: [], object: nil, default_value: nil)
       data = data.map do |datum|
         name = datum[:name]
-        value = object.nil? ? "" : object.send(name)
+        type = datum.fetch(:type, :value)
+        value = sanitize_value(
+          object, :name => name, :type => type, :default_value => default_value
+        )
 
-        {"name" => name.to_s, datum.fetch(:type, "value").to_s => value}
+        {"name" => name.to_s, type.to_s => value}
       end
 
       if data.empty?
@@ -105,7 +108,9 @@ module Conglomerate
       if attrs.empty?
         collection
       else
-        collection.merge({"template" => apply_data({}, :data => attrs)})
+        collection.merge(
+          {"template" => apply_data({}, :data => attrs, :default_value => "")}
+        )
       end
     end
 
@@ -145,12 +150,26 @@ module Conglomerate
     def build_query(rel, data, block)
       query = {"rel" => rel.to_s}
       query = apply_href(query, :proc => block)
-      apply_data(query, :data => data)
+      apply_data(query, :data => data, :default_value => "")
     end
 
     def build_item_link(rel, proc: nil, object: nil)
       link = {"rel" => rel.to_s}
       apply_href(link, :proc => proc, :object => object)
+    end
+
+    def sanitize_value(object, name:, type: :value, default_value: nil)
+      if blank?(object) || blank?(object.send(name))
+        if type == :array
+          []
+        elsif type == :object
+          {}
+        else
+          default_value
+        end
+      else
+        object.send(name)
+      end
     end
 
     def blank?(value)
