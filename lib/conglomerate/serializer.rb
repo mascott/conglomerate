@@ -41,15 +41,21 @@ module Conglomerate
       end
     end
 
-    def apply_data(collection, data: [], object: nil, default_value: nil)
+    def apply_data(
+      collection, data: [], object: nil, default_value: nil,
+      build_template: false
+    )
       data = data.map do |datum|
         name = datum[:name]
         type = datum.fetch(:type, :value)
+        prompt = datum.fetch(:prompt, nil)
         value = sanitize_value(
           object, :name => name, :type => type, :default_value => default_value
         )
 
-        {"name" => name.to_s, type.to_s => value}
+        {"name" => name.to_s, type.to_s => value}.tap do |d|
+          d["prompt"] = prompt if build_template && prompt
+        end
       end
 
       if data.empty?
@@ -104,12 +110,17 @@ module Conglomerate
     def apply_template(collection)
       attrs = self.class._attributes
         .select { |attr| attr[:template] }
+      attrs += self.class._templates
 
       if attrs.empty?
         collection
       else
         collection.merge(
-          {"template" => apply_data({}, :data => attrs, :default_value => "")}
+          {
+            "template" => apply_data(
+              {}, :data => attrs, :default_value => "", :build_template => true
+            )
+          }
         )
       end
     end
@@ -201,10 +212,12 @@ module Conglomerate
         }
       end
 
-      def attribute(name, template: false, rel: nil, type: :value, &block)
+      def attribute(
+        name, template: false, rel: nil, type: :value, prompt: nil, &block
+      )
         self._attributes = self._attributes << {
           :name => name, :template => template, :rel => rel, :type => type,
-          :block => block
+          :prompt => prompt, :block => block
         }
       end
 
@@ -214,7 +227,14 @@ module Conglomerate
         }
       end
 
-      attr_writer :_href, :_item_href, :_queries, :_attributes, :_links
+      def template(name, type: :value, prompt: nil)
+        self._templates = self._templates << {
+          :name => name, :type => type, :prompt => prompt, :template => true
+        }
+      end
+
+      attr_writer :_href, :_item_href, :_queries, :_attributes, :_links,
+        :_templates
 
       def _href
         @_href || nil
@@ -234,6 +254,10 @@ module Conglomerate
 
       def _links
         @_links || []
+      end
+
+      def _templates
+        @_templates || []
       end
     end
   end
