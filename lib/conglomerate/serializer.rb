@@ -186,6 +186,8 @@ module Conglomerate
     def blank?(value)
       if value.is_a?(String)
         value !~ /[^[:space:]]/
+      elsif [true, false].include?(value)
+        false
       else
         value.respond_to?(:empty?) ? value.empty? : !value
       end
