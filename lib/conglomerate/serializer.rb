@@ -176,7 +176,11 @@ module Conglomerate
         elsif type == :object
           {}
         else
-          default_value
+          if present?(object) && object.send(name) == false
+            false
+          else
+            default_value
+          end
         end
       else
         object.send(name)
@@ -186,8 +190,6 @@ module Conglomerate
     def blank?(value)
       if value.is_a?(String)
         value !~ /[^[:space:]]/
-      elsif [true, false].include?(value)
-        false
       else
         value.respond_to?(:empty?) ? value.empty? : !value
       end
