@@ -92,6 +92,7 @@ module Conglomerate
 
         links = self.class._attributes
           .select { |attr| attr[:block] }
+        links += self.class._item_links
 
         if links.empty?
           item.empty? ? nil : item
@@ -128,7 +129,7 @@ module Conglomerate
     def apply_links(collection, links: self.class._links, object: nil)
       if object && !links.empty?
         links = links.map do |link|
-          if present?(object.send(link[:name]))
+          if !link.has_key?(:name) || present?(object.send(link[:name]))
             build_item_link(
               link[:rel], :proc => link[:block], :object => object
             )
@@ -231,6 +232,12 @@ module Conglomerate
         }
       end
 
+      def item_link(rel, &block)
+        self._item_links = self._item_links << {
+          :rel => rel, :block => block
+        }
+      end
+
       def template(name, type: :value, prompt: nil)
         self._templates = self._templates << {
           :name => name, :type => type, :prompt => prompt, :template => true
@@ -238,7 +245,7 @@ module Conglomerate
       end
 
       attr_writer :_href, :_item_href, :_queries, :_attributes, :_links,
-        :_templates
+        :_item_links, :_templates
 
       def _href
         @_href || nil
@@ -258,6 +265,10 @@ module Conglomerate
 
       def _links
         @_links || []
+      end
+
+      def _item_links
+        @_item_links || []
       end
 
       def _templates

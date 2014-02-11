@@ -18,8 +18,8 @@ class ConglomerateTestSerializer
   attribute :team_ids, :rel => :teams, :type => :array do |item|
     team_url(item.team_ids.join(","))
   end
-  attribute :user_ids, :rel => :users, :type => :array do |item|
-    user_url(item.user_ids.join(","))
+  item_link :users do |item|
+    users_search_url :object_id => item.id
   end
   attribute :is_available
 
@@ -78,6 +78,9 @@ describe Conglomerate do
         "https://example.com/teams/1,2"
       }
       allow(context).to receive(:test_url) { "abc" }
+      allow(context).to receive(:users_search_url).with(:object_id => 1) {
+        "def"
+      }
     end
   end
 
@@ -161,12 +164,12 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 2},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "array" => [1,2]},
-                {"name" => "user_ids", "array" => []},
                 {"name" => "is_available", "value" => false}
               ],
               "links" => [
                 {"rel" => "event", "href" => "https://example.com/events/2"},
-                {"rel" => "teams", "href" => "https://example.com/teams/1,2"}
+                {"rel" => "teams", "href" => "https://example.com/teams/1,2"},
+                {"rel" => "users", "href" => "def"}
               ]
             }
           ]
