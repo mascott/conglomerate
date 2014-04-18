@@ -18,6 +18,9 @@ class ConglomerateTestSerializer
   attribute :team_ids, :rel => :teams, :type => :array do |item|
     team_url(item.team_ids.join(","))
   end
+  attribute :event_date_time
+  attribute :event_date
+  attribute :event_time
   item_link :users do |item|
     users_search_url :object_id => item.id
   end
@@ -50,6 +53,9 @@ describe Conglomerate do
       "Object",
       :id => 1,
       :description => "Tasty Burgers",
+      :event_date_time => DateTime.parse("1981-11-28T10:00:00+00:00"),
+      :event_date => Date.parse("1981-11-28"),
+      :event_time => Time.parse("1981-11-28T10:00:00+00:00"),
       :event_id => 2,
       :roster_id => nil,
       :team_ids => [1,2],
@@ -164,6 +170,9 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 2},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "array" => [1,2]},
+                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "event_date", "value" => "1981-11-28"},
+                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "is_available", "value" => false}
               ],
               "links" => [

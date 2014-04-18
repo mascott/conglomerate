@@ -52,6 +52,7 @@ module Conglomerate
         value = sanitize_value(
           object, :name => name, :type => type, :default_value => default_value
         )
+        value = format_value(value)
 
         {"name" => name.to_s, type.to_s => value}.tap do |d|
           d["prompt"] = prompt if build_template && prompt
@@ -185,6 +186,17 @@ module Conglomerate
         end
       else
         object.send(name)
+      end
+    end
+
+    def format_value(value)
+      case value
+      when DateTime, Time
+        value.iso8601.sub(/\+00:00$/, "Z")
+      when Date
+        value.strftime("%Y-%m-%d")
+      else
+        value
       end
     end
 
