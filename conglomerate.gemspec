@@ -6,7 +6,7 @@ require "conglomerate/version"
 Gem::Specification.new do |spec|
   spec.name          = "conglomerate"
   spec.version       = Conglomerate::VERSION
-  spec.authors       = ["Shane Emmons"]
+  spec.authors       = ["Shane Emmons", "Emily Dobervich"]
   spec.email         = ["oss@teamsnap.com"]
   spec.summary       = "A library to serialize Ruby objects into collection+json"
   spec.description   = "A library to serialize Ruby objects into collection+json"
