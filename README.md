@@ -48,6 +48,8 @@ class TeamSerializer
   link :root { root_url }
 
   query :search, :data => :id { search_teams_url }
+
+  command :populate, :data => :id { populate_teams_url }
 end
 
 # Step 2: Serialize any object
@@ -100,6 +102,15 @@ end
       {
         "rel": "search",
         "href": "http://example.com/teams/search",
+        "data": [
+          {"name": "id", "value": ""}
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "rel": "populate",
+        "href": "http://example.com/teams/populate",
         "data": [
           {"name": "id", "value": ""}
         ]

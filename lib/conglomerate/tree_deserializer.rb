@@ -1,6 +1,8 @@
 module Conglomerate
   class TreeDeserializer
-    PARTICLES = [Collection, Item, Error, Template, Datum, Query, Item]
+    PARTICLES = [
+      Collection, Item, Error, Template, Datum, Query, Command, Item
+    ]
 
     def initialize(object)
       self.object = object
@@ -26,7 +28,7 @@ module Conglomerate
         end
       end
 
-      particle = klass.new(attributes)
+      klass.new(attributes)
     end
 
     def deserialize_attribute(attribute, attr_metadata)

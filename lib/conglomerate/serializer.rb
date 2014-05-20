@@ -22,7 +22,7 @@ module Conglomerate
     attr_accessor :objects, :context
 
     def actions
-      [:version, :href, :queries, :items, :template, :links]
+      [:version, :href, :queries, :commands, :items, :template, :links]
     end
 
     def apply_version(collection)
@@ -75,6 +75,20 @@ module Conglomerate
         collection
       else
         collection.merge({"queries" => queries})
+      end
+    end
+
+    def apply_commands(collection)
+      commands = self.class._commands.map do |command|
+        build_command(
+          command[:rel], command[:data], command[:prompt], command[:block]
+        )
+      end
+
+      if commands.empty?
+        collection
+      else
+        collection.merge({"commands" => commands})
       end
     end
 
@@ -166,6 +180,13 @@ module Conglomerate
       apply_data(query, :data => data, :default_value => "")
     end
 
+    def build_command(rel, data, prompt, block)
+      command = {"rel" => rel.to_s}
+      command = apply_href(command, :proc => block)
+      command["prompt"] = prompt if prompt
+      apply_data(command, :data => data, :default_value => "")
+    end
+
     def build_item_link(rel, proc: nil, object: nil)
       link = {"rel" => rel.to_s}
       apply_href(link, :proc => proc, :object => object)
@@ -229,6 +250,14 @@ module Conglomerate
         }
       end
 
+      def command(rel, data: [], prompt: nil, &block)
+        data = [*data]
+        data = data.map { |datum| {:name => datum} }
+        self._commands = self._commands << {
+          :rel => rel, :data => data, :prompt => prompt, :block => block
+        }
+      end
+
       def attribute(
         name, template: false, rel: nil, type: :value, prompt: nil, &block
       )
@@ -257,7 +286,7 @@ module Conglomerate
       end
 
       attr_writer :_href, :_item_href, :_queries, :_attributes, :_links,
-        :_item_links, :_templates
+        :_item_links, :_templates, :_commands
 
       def _href
         @_href || nil
@@ -269,6 +298,10 @@ module Conglomerate
 
       def _queries
         @_queries || []
+      end
+
+      def _commands
+        @_commands || []
       end
 
       def _attributes

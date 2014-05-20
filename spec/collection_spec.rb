@@ -37,4 +37,16 @@ describe Conglomerate::Collection do
       expect(Conglomerate.serialize(collection)["queries"]).to include(Conglomerate.serialize(query))
     end
   end
+
+  context "commands" do
+    it "serializes commands correctly" do
+      command = Conglomerate::Command.new(
+        :href => "http://this.is.a.command",
+        :rel => "Something"
+      )
+
+      collection.commands << command
+      expect(Conglomerate.serialize(collection)["commands"]).to include(Conglomerate.serialize(command))
+    end
+  end
 end
