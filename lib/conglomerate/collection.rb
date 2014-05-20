@@ -11,5 +11,6 @@ module Conglomerate
     array :items, :contains => Item
     array :links, :contains => Link
     array :queries, :contains => Query
+    array :commands, :contains => Command
   end
 end

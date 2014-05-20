@@ -34,6 +34,10 @@ class ConglomerateTestSerializer
     search_items_url
   end
 
+  command :populate, :data => :id, :prompt => "test 123" do
+    populate_items_url
+  end
+
   template :repeats, :prompt => "true|false"
 end
 
@@ -70,6 +74,7 @@ describe Conglomerate do
       "Context",
       :request => request,
       :search_items_url => "https://example.com/items/search",
+      :populate_items_url => "https://example.com/items/populate",
     ).tap do |context|
       allow(context).to receive(:item_url).with(1) {
         "https://example.com/items/1"
@@ -136,6 +141,27 @@ describe Conglomerate do
           {
             "href" => "https://example.com/items/search",
             "rel" => "search",
+            "data" => [
+              {"name" => "id", "value" => ""}
+            ]
+          }
+        ]
+      )
+    end
+  end
+
+  describe "#command" do
+    it "doesn't include any command templates if none are provided" do
+      expect(null_collection.keys).to_not include("commands")
+    end
+
+    it "adds a command template to the collection" do
+      expect(test_collection["commands"]).to match_array(
+        [
+          {
+            "href" => "https://example.com/items/populate",
+            "rel" => "populate",
+            "prompt" => "test 123",
             "data" => [
               {"name" => "id", "value" => ""}
             ]

@@ -8,6 +8,7 @@ require_relative "conglomerate/datum"
 require_relative "conglomerate/template"
 require_relative "conglomerate/item"
 require_relative "conglomerate/query"
+require_relative "conglomerate/command"
 require_relative "conglomerate/collection"
 require_relative "conglomerate/tree_deserializer"
 
