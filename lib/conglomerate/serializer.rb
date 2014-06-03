@@ -212,8 +212,10 @@ module Conglomerate
 
     def format_value(value)
       case value
-      when DateTime, Time
-        value.iso8601.sub(/\+00:00$/, "Z")
+      when DateTime
+        value.to_time.utc.iso8601.sub(/\+00:00$/, "Z")
+      when Time
+        value.utc.iso8601.sub(/\+00:00$/, "Z")
       when Date
         value.strftime("%Y-%m-%d")
       else
