@@ -61,7 +61,7 @@ module Conglomerate
             attr_metadata = self.class.attributes[attr]
 
             if type = attr_metadata[:type]
-              raise "TypeMismatch" if !val.is_a?(type)
+              raise "TypeMismatch" if !val.is_a?(type) && val != nil
             end
 
             self.instance_variable_set("@#{attr}", val)

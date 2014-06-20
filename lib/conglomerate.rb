@@ -11,6 +11,20 @@ require_relative "conglomerate/query"
 require_relative "conglomerate/command"
 require_relative "conglomerate/collection"
 require_relative "conglomerate/tree_deserializer"
+require_relative "conglomerate/root"
+
+require_relative "conglomerate/mixin_ivar_helper"
+require_relative "conglomerate/builder_call"
+
+require_relative "conglomerate/builder_serializer"
+require_relative "conglomerate/particle_builder"
+require_relative "conglomerate/link_builder"
+require_relative "conglomerate/datum_builder"
+require_relative "conglomerate/query_builder"
+require_relative "conglomerate/template_builder"
+require_relative "conglomerate/item_builder"
+require_relative "conglomerate/collection_builder"
+require_relative "conglomerate/root_builder"
 
 module Conglomerate
   def self.serialize(serializable)
