@@ -1,8 +1,7 @@
 # Conglomerate
 
 [![Gem Version](https://badge.fury.io/rb/conglomerate.png)](http://badge.fury.io/rb/conglomerate)
-[![Semaphore](https://semaphoreapp.com/api/v1/projects/7b914dac-6aa6-43dd-94a9-53698ef1922a/120842/shields_badge.png
-)](https://semaphoreapp.com/minter/conglomerate)
+[ ![Codeship Status for teamsnap/conglomerate](https://www.codeship.io/projects/7210a3f0-de00-0131-af05-5236ebb52643/status)](https://www.codeship.io/projects/24758)
 [![Code Climate](https://codeclimate.com/github/teamsnap/conglomerate.png)](https://codeclimate.com/github/teamsnap/conglomerate)
 [![Coverage Status](https://coveralls.io/repos/teamsnap/conglomerate/badge.png?branch=master)](https://coveralls.io/r/teamsnap/conglomerate?branch=master)
 [![Dependency Status](https://gemnasium.com/teamsnap/conglomerate.png)](https://gemnasium.com/teamsnap/conglomerate)
