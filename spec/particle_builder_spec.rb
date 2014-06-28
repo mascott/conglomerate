@@ -58,7 +58,7 @@ class ConglomerateNullParticleSerializer
 end
 
 describe Conglomerate do
-  let(:object) do
+  let(:object1) do
     double(
       "Object",
       :id => 1,
@@ -74,6 +74,22 @@ describe Conglomerate do
     )
   end
 
+  let(:object2) do
+    double(
+      "Object",
+      :id => 2,
+      :description => "Tasty Pizza",
+      :event_date_time => DateTime.parse("1982-01-22T10:00:00+00:00"),
+      :event_date => Date.parse("1981-01-22"),
+      :event_time => Time.parse("1981-01-22T10:00:00+00:00"),
+      :event_id => 3,
+      :roster_id => nil,
+      :team_ids => [3,4],
+      :user_ids => [],
+      :is_available => true
+    )
+  end
+
   let(:context) do
     request = double("Request", :original_url => "https://example.com/items")
     double(
@@ -85,8 +101,14 @@ describe Conglomerate do
       allow(context).to receive(:item_url).with(1) {
         "https://example.com/items/1"
       }
+      allow(context).to receive(:item_url).with(2) {
+        "https://example.com/items/2"
+      }
       allow(context).to receive(:event_url).with(2) {
         "https://example.com/events/2"
+      }
+      allow(context).to receive(:event_url).with(3) {
+        "https://example.com/events/3"
       }
       allow(context).to receive(:events_url) {
         "https://example.com/events"
@@ -94,23 +116,33 @@ describe Conglomerate do
       allow(context).to receive(:team_url).with("1,2") {
         "https://example.com/teams/1,2"
       }
+      allow(context).to receive(:team_url).with("3,4") {
+        "https://example.com/teams/3,4"
+      }
       allow(context).to receive(:test_url) { "abc" }
       allow(context).to receive(:users_search_url).with(:object_id => 1) {
         "def"
+      }
+      allow(context).to receive(:users_search_url).with(:object_id => 2) {
+        "ghi"
       }
     end
   end
 
   let(:test_serializer) do
-    ConglomerateTestParticleSerializer.new(object, :context => context).serialize
+    ConglomerateTestParticleSerializer.new(object1, :context => context).serialize
   end
 
   let(:extra_test_serializer) do
-    ConglomerateExtraTestParticleSerializer.new(object, :context => context).serialize
+    ConglomerateExtraTestParticleSerializer.new(object1, :context => context).serialize
   end
 
   let(:null_serializer) do
-    ConglomerateNullParticleSerializer.new(object, :context => context).serialize
+    ConglomerateNullParticleSerializer.new(object1, :context => context).serialize
+  end
+
+  let(:multi_test_serializer) do
+    ConglomerateTestParticleSerializer.new([object1, object2], :context => context).serialize
   end
 
   let(:test_collection) { test_serializer["collection"] }
@@ -118,6 +150,8 @@ describe Conglomerate do
   let(:extra_test_collection) { extra_test_serializer["collection"] }
 
   let(:null_collection) { null_serializer["collection"] }
+
+  let(:multi_test_collection) { multi_test_serializer["collection"] }
 
   describe "#version" do
     it "sets version to 1.0" do
@@ -164,8 +198,8 @@ describe Conglomerate do
 
       it "doesn't have an items array if items is empty" do
         test_serializer = ConglomerateTestParticleSerializer
-        .new(nil, :context => context)
-        .serialize
+          .new(nil, :context => context)
+          .serialize
         test_collection = test_serializer["collection"]
         expect(test_collection.keys).to_not include("items")
       end
@@ -202,6 +236,51 @@ describe Conglomerate do
             {
               "data" => [
                 {"name" => "id", "value" => 1}
+              ]
+            }
+          ]
+        )
+      end
+
+      it "correctly handles multiple items" do
+        expect(multi_test_collection["items"]).to eq(
+          [
+            {
+              "href" => "https://example.com/items/1",
+              "data" => [
+                {"name" => "description", "value" => "Tasty Burgers", "prompt" => "awesome"},
+                {"name" => "id", "value" => 1},
+                {"name" => "event_id", "value" => 2},
+                {"name" => "roster_id", "value" => nil},
+                {"name" => "team_ids", "value" => [1,2]},
+                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "event_date", "value" => "1981-11-28"},
+                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "is_available", "value" => false}
+              ],
+              "links" => [
+                {"href" => "https://example.com/events/2", "rel" => "event"},
+                {"href" => "https://example.com/teams/1,2", "rel" => "teams"},
+                {"href" => "def", "rel" => "users"}
+              ]
+            },
+            {
+              "href" => "https://example.com/items/2",
+              "data" => [
+                {"name" => "description", "value" => "Tasty Pizza", "prompt" => "awesome"},
+                {"name" => "id", "value" => 2},
+                {"name" => "event_id", "value" => 3},
+                {"name" => "roster_id", "value" => nil},
+                {"name" => "team_ids", "value" => [3,4]},
+                {"name" => "event_date_time", "value" => "1981-01-22T10:00:00Z"},
+                {"name" => "event_date", "value" => "1981-01-22"},
+                {"name" => "event_time", "value" => "1981-01-22T10:00:00Z"},
+                {"name" => "is_available", "value" => true}
+              ],
+              "links" => [
+                {"href" => "https://example.com/events/3", "rel" => "event"},
+                {"href" => "https://example.com/teams/3,4", "rel" => "teams"},
+                {"href" => "ghi", "rel" => "users"}
               ]
             }
           ]
