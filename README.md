@@ -35,20 +35,29 @@ Or install it yourself as:
 ```ruby
 # Step 1: Create a serializer
 class TeamSerializer
-  include Conglomerate.serializer
+  include Conglomerate::RootBuilder
 
   href { teams_url }
-  item_href { |item| team_url(item.id) }
 
-  attribute :id
-  attribute :name, :template => true
-  attribute :event_ids, :rel => :events { |item| event_url(item.event_ids.join(",")) }
+  item "Team" do |item|
+    href { team_url(item.id) }
 
-  link :root { root_url }
+    datum :id
+    datum :name
+    datum :event_ids
 
-  query :search, :data => :id { search_teams_url }
+    link :events, :href => Proc.new { event_url(item.event_ids.join(",")) }
+  end
 
-  command :populate, :data => :id { populate_teams_url }
+  link :root, :href => Proc.new { root_url }
+
+  query :search, :href => Proc.new { search_items_url } do
+    datum :id
+  end
+
+  template do
+    datum :name
+  end
 end
 
 # Step 2: Serialize any object
@@ -101,15 +110,6 @@ end
       {
         "rel": "search",
         "href": "http://example.com/teams/search",
-        "data": [
-          {"name": "id", "value": ""}
-        ]
-      }
-    ],
-    "commands": [
-      {
-        "rel": "populate",
-        "href": "http://example.com/teams/populate",
         "data": [
           {"name": "id", "value": ""}
         ]
