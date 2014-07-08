@@ -193,17 +193,13 @@ module Conglomerate
     end
 
     def sanitize_value(object, name:, type: :value, default_value: nil)
-      if blank?(object) || blank?(object.send(name))
+      if object.nil? || object.send(name).nil?
         if type == :array
           []
         elsif type == :object
           {}
         else
-          if present?(object) && object.send(name) == false
-            false
-          else
-            default_value
-          end
+          default_value
         end
       else
         object.send(name)
