@@ -61,15 +61,16 @@ module Conglomerate
           builder_klass.class_eval(&block) if block
         end
 
-        builder = builder_klass.new(objects, :name => name, :context => context)
+        local_objects = item ? [item] : objects
+        builder = builder_klass.new(local_objects, :name => name, :context => context)
 
-        attrs = {}
+        local_attrs = {}
 
         opts.each do |key, value|
-          attrs[key] = value_from_proc(value)
+          local_attrs[key] = value_from_proc(value)
         end
 
-        builder.build(attrs)
+        builder.build(local_attrs)
       end
 
       def value_from_proc(value)
