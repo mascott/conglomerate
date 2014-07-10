@@ -272,7 +272,7 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 3},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "value" => [3,4]},
-                {"name" => "event_date_time", "value" => "1981-01-22T10:00:00Z"},
+                {"name" => "event_date_time", "value" => "1982-01-22T10:00:00Z"},
                 {"name" => "event_date", "value" => "1981-01-22"},
                 {"name" => "event_time", "value" => "1981-01-22T10:00:00Z"},
                 {"name" => "is_available", "value" => true}
