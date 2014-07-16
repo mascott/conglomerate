@@ -19,6 +19,7 @@ class ConglomerateTestParticleSerializer
       datum :event_date_time
       datum :event_date
       datum :event_time
+      datum :alternately_named_event_time, :value => Proc.new{ item.event_time }
 
       datum :is_available
 
@@ -218,6 +219,7 @@ describe Conglomerate do
                 {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "event_date", "value" => "1981-11-28"},
                 {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "alternately_named_event_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "is_available", "value" => false}
               ],
               "links" => [
@@ -256,6 +258,7 @@ describe Conglomerate do
                 {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "event_date", "value" => "1981-11-28"},
                 {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "alternately_named_event_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "is_available", "value" => false}
               ],
               "links" => [
@@ -275,6 +278,7 @@ describe Conglomerate do
                 {"name" => "event_date_time", "value" => "1982-01-22T10:00:00Z"},
                 {"name" => "event_date", "value" => "1981-01-22"},
                 {"name" => "event_time", "value" => "1981-01-22T10:00:00Z"},
+                {"name" => "alternately_named_event_time", "value" => "1981-01-22T10:00:00Z"},
                 {"name" => "is_available", "value" => true}
               ],
               "links" => [
