@@ -7,7 +7,7 @@ module Conglomerate
     module BuildOverride
       def build(attrs = {})
         item = objects.first
-        val = item.send(_builder_name) if item
+        val = item.send(_builder_name) if item && item.respond_to?(_builder_name)
 
         attrs = {
           :name => _builder_name,
