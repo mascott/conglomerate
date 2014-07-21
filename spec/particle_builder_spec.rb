@@ -16,9 +16,9 @@ class ConglomerateTestParticleSerializer
       datum :roster_id
       datum :team_ids
 
-      datum :event_date_time
-      datum :event_date
-      datum :event_time
+      datum :event_date_time, :type => "datetime"
+      datum :event_date, :type => "date"
+      datum :event_time, :type => "time"
       datum :alternately_named_event_time, :value => Proc.new{ item.event_time }
 
       datum :is_available
@@ -36,7 +36,7 @@ class ConglomerateTestParticleSerializer
 
     template do
       datum :repeats, :prompt => "true|false"
-      datum :description, :prompt => "awesome"
+      datum :description, :prompt => "awesome", :type => "string"
     end
   end
 end
@@ -216,9 +216,9 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 2},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "value" => [1,2]},
-                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
-                {"name" => "event_date", "value" => "1981-11-28"},
-                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z", "type" => "datetime"},
+                {"name" => "event_date", "value" => "1981-11-28", "type" => "date"},
+                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z", "type" => "time"},
                 {"name" => "alternately_named_event_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "is_available", "value" => false}
               ],
@@ -255,9 +255,9 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 2},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "value" => [1,2]},
-                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z"},
-                {"name" => "event_date", "value" => "1981-11-28"},
-                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z"},
+                {"name" => "event_date_time", "value" => "1981-11-28T10:00:00Z", "type" => "datetime"},
+                {"name" => "event_date", "value" => "1981-11-28", "type" => "date"},
+                {"name" => "event_time", "value" => "1981-11-28T10:00:00Z", "type" => "time"},
                 {"name" => "alternately_named_event_time", "value" => "1981-11-28T10:00:00Z"},
                 {"name" => "is_available", "value" => false}
               ],
@@ -275,9 +275,9 @@ describe Conglomerate do
                 {"name" => "event_id", "value" => 3},
                 {"name" => "roster_id", "value" => nil},
                 {"name" => "team_ids", "value" => [3,4]},
-                {"name" => "event_date_time", "value" => "1982-01-22T10:00:00Z"},
-                {"name" => "event_date", "value" => "1981-01-22"},
-                {"name" => "event_time", "value" => "1981-01-22T10:00:00Z"},
+                {"name" => "event_date_time", "value" => "1982-01-22T10:00:00Z", "type" => "datetime"},
+                {"name" => "event_date", "value" => "1981-01-22", "type" => "date"},
+                {"name" => "event_time", "value" => "1981-01-22T10:00:00Z", "type" => "time"},
                 {"name" => "alternately_named_event_time", "value" => "1981-01-22T10:00:00Z"},
                 {"name" => "is_available", "value" => true}
               ],
@@ -300,7 +300,7 @@ describe Conglomerate do
       it "includes a valid template if attributes have them" do
         expect(test_collection["template"]["data"]).to match_array(
           [
-            {"name" => "description", "value" => nil, "prompt" => "awesome"},
+            {"name" => "description", "value" => nil, "prompt" => "awesome", "type" => "string"},
             {"name" => "repeats", "value" => nil, "prompt" => "true|false"}
           ]
         )

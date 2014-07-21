@@ -21,5 +21,6 @@ module Conglomerate
     value :name
     value :value
     value :prompt
+    value :type
   end
 end
