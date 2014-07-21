@@ -127,10 +127,10 @@ end
 }
 ```
 
-## Roadmap
+## Collection+JSON Extensions
 
-- Use more defaults to simplify the creation of serializers.
-
+[Command Templates](https://gist.github.com/semmons99/6280650)
+[Data Properties](https://gist.github.com/semmons99/0e02ece6e079cfac27c0)
 ## Contributing
 
 1. Fork it ( http://github.com/teamsnap/conglomerate/fork )
