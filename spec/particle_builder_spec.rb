@@ -1,5 +1,6 @@
 require_relative "spec_helper"
 require_relative "../lib/conglomerate"
+require_relative "../lib/conglomerate/ext/datum_type"
 
 class ConglomerateTestParticleSerializer
   include Conglomerate::RootBuilder.serializer
